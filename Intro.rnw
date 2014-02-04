@@ -1,0 +1,81 @@
+\documentclass[12pt, a4paper, oneside]{article} % Paper size, default font size and one-sided paper
+%\graphicspath{{./Figures/}} % Specifies the directory where pictures are stored
+%\usepackage[dcucite]{harvard}
+%\usepackage{rotating}
+\usepackage{amsmath}
+%\usepackage{setspace}
+\usepackage{pdflscape}
+\usepackage[flushleft]{threeparttable}
+%\usepackage{multirow}
+\usepackage[comma, sort&compress]{natbib}% Use the natbib reference package - read up on this to edit the reference style; if you want text (e.g. Smith et al., 2012) for the in-text references (instead of numbers), remove 'numbers' 
+\usepackage{graphicx}
+%\bibliographystyle{plainnat}
+\bibliographystyle{agsm}
+\usepackage[colorlinks = true, citecolor = blue, linkcolor = blue]{hyperref}
+%\hypersetup{urlcolor=blue, colorlinks=true} % Colors hyperlinks in blue - change to black if annoying
+%\renewcommand[\harvardurl]{URL: \url}
+\begin{document}
+\title{Introduction to Time Series Analysis}
+\author{Rob Hayward}
+\date{\today}
+\maketitle
+%\begin{abstract}
+%erehrere
+%\end{abstract}
+
+
+\section{ARMA(p,q) time series}
+This comes from \href{http://freakonometrics.hypotheses.org/12217}{Arthur Charptentier}.  Given the ARMA(1,1) model
+\begin{equation}
+X_t = \phi X_{t-1} + \varepsilon_t + \theta \varepsilon_{t-1}
+\end{equation}
+
+<<MA, fig.height=4>>=
+theta = 0.7
+phi = 0.5
+n = 1000
+Z = rep(0, n)
+set.seed(1)
+e = rnorm(n)
+for(t in 2:n) 
+  Z[t] = phi * Z[t-1] + e[t] + theta * e[t - 1]
+Z = Z[800:1000]
+plot(Z, type = 'l', main = "ARMA(1,1) process")
+@
+If the MA element is not identified and purely AR model is estimated by least squres the estimate of $\phi$ is not consistent. 
+\begin{equation}
+X_t = \phi X_{t-1} + \varepsilon_t
+\end{equation}
+
+<<AR, fig.height=4>>=
+base = data.frame(Y = Z[2:n], X = Z[1:(n-1)])
+regression = lm(Y ~ 0 + X, data = base)
+summary(regression)
+@
+Compute the autocorreltion of the noise.  
+<<Corr>>=
+n = 200
+cor(residuals(regression)[2:n], residuals(regression)[1:(n - 1)])
+@
+More formlly, with the Durbin-Watson sttistic
+<<DQ>>=
+require(car)
+durbinWatsonTest(regression)
+@
+It should be assumed that 
+\begin{equation}
+u_t = \varepsilon_t + \theta \vrepsilon_{t-1}
+\end{equation}
+and 
+\begin{equation}
+\rho(1) = \frac{\theta}{1 + \theta^2}
+\end{equation}
+<<Polu>>=
+polyroot(c(1, -1/cor(residuals(regression)[2:n], 
+                     residuals(regression)[1:(n - 1)]), 1))
+@
+
+
+
+
+\end{document}
