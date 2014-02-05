@@ -57,20 +57,21 @@ Compute the autocorreltion of the noise.
 n = 200
 cor(residuals(regression)[2:n], residuals(regression)[1:(n - 1)])
 @
-More formlly, with the Durbin-Watson sttistic
-<<DQ>>=
+More formlly, with the Durbin-Watson statistic to test the null that the autocorrelation is zero. 
+<<DQ, warning=FALSE, message=FALSE>>=
 require(car)
 durbinWatsonTest(regression)
 @
 It should be assumed that 
 \begin{equation}
-u_t = \varepsilon_t + \theta \vrepsilon_{t-1}
+u_t = \varepsilon_t + \theta \varepsilon_{t-1}
 \end{equation}
 and 
 \begin{equation}
 \rho(1) = \frac{\theta}{1 + \theta^2}
 \end{equation}
-<<Polu>>=
+
+<<Polu, tidy=TRUE>>=
 polyroot(c(1, -1/cor(residuals(regression)[2:n], 
                      residuals(regression)[1:(n - 1)]), 1))
 @
