@@ -75,7 +75,7 @@ and
 polyroot(c(1, -1/cor(residuals(regression)[2:n], 
                      residuals(regression)[1:(n - 1)]), 1))
 @
-
+More
 
 
 
