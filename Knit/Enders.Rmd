@@ -1,0 +1,10 @@
+---
+title: "Enders"
+author: "Rob Hayward"
+date: "24 July 2016"
+output: 
+  html_document: 
+    highlight: tango
+    theme: journal
+---
+This is some work that I am doing on the Enders text.  This comes from page 290 about representing the transfer funcction of terrorist attacks in Italy. 
